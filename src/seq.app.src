@@ -1,0 +1,9 @@
+{application, seq,
+ [
+  {description, "Lazy sequences"},
+  {vsn, "0.0.1"},
+  {modules, [seq]},
+  {applications, [stdlib]},
+  {start_phases, []}
+ ]
+}.
