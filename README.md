@@ -7,7 +7,7 @@ data lazily and in a compositional fashion. To achieve that goal, *seq*
 have a simple definition, so that sequential data can easily be boxed
 inside of a *seq*. Further, once boxed inside a *seq* there are many
 *seq* to *seq* operations that allow for lazy, compositional processing.
-These operations include **map**, **filter**, **take**, and **fold**.
+These operations include **map**, **filter**, **take**, **fold**, and **zip**.
 Additionally, **to_list** is defined if the sequence must be immediately
 materialized. Finally, **from_list** and **series** are provided as
 examples of how one might construct a *seq*.
