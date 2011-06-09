@@ -7,7 +7,7 @@ data lazily and in a compositional fashion. To achieve that goal, *seq*
 have a simple definition, so that sequential data can easily be boxed
 inside of a *seq*. Further, once boxed inside a *seq* there are many
 *seq* to *seq* operations that allow for lazy, compositional processing.
-These operations include **map**, **fliter**, **take**, and **fold**.
+These operations include **map**, **filter**, **take**, and **fold**.
 Additionally, **to_list** is defined if the sequence must be immediately
 materialized. Finally, **from_list** and **series** are provided as
 examples of how one might construct a *seq*.
@@ -19,7 +19,7 @@ of the sequence.
 
 
 It is simple to create *seq* in your application. To read a file line by
-line using *seq*s, one might be the follow:
+line using a *seq*, one might be the follow:
 
     -spec file_line_seq(iolist()) -> seq:seq() | undefined.
     %% @doc Creates a seq out of a file with each line of the file as it's elements.
