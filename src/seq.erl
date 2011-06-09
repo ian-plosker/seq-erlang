@@ -36,6 +36,15 @@ series(Start, Interval) ->
         fun() -> series(Start + Interval, Interval) end
     }.
 
+-spec random_integers(integer(), integer()) -> seq(integer()).
+random_integers(Minimum, Maximum) ->
+    RandomInteger = random:uniform(Maximum - Minimum + 1),
+    {
+        seq,
+        fun() -> RandomInteger + Minimum - 1 end,
+        fun() -> random_integers(Minimum, Maximum) end
+    }.
+
 -spec to_list(seq(T) | [] | T) -> [T].
 to_list({ seq, First, Rest }) -> [ First() | to_list(Rest()) ];
 to_list(undefined) -> [].
@@ -87,6 +96,16 @@ take(0, _) -> undefined;
 take(C, {seq, First, Rest }) ->
     {
         seq,
-        fun()  -> First() end,
-        fun()  -> take(C - 1, Rest()) end
+        fun() -> First() end,
+        fun() -> take(C - 1, Rest()) end
+    }.
+
+-spec zip(fun((T,U) -> V), seq(T), seq(U)) -> seq(V).
+zip(_Zip, _Seq1, undefined) -> undefined;
+zip(_Zip, undefined, _Seq2) -> undefined;
+zip(Zip, Seq1, Seq2) ->
+    {
+        seq,
+        fun() -> Zip(first(Seq1), first(Seq2)) end,
+        fun() -> zip(Zip, rest(Seq1), rest(Seq2)) end
     }.
