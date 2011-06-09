@@ -17,6 +17,14 @@ cons(N, Seq) ->
         fun() -> Seq end
     }.
 
+-spec nth(integer(), seq(T)) -> T.
+nth(1, Seq) -> first(Seq);
+nth(N, Seq) -> nth(N - 1, rest(Seq)).
+
+-spec nthrest(integer(), seq(T)) -> seq(T).
+nthrest(1, Seq) -> rest(Seq);
+nthrest(N, Seq) -> nth(N - 1, rest(Seq)).
+
 -spec from_list([T,...]) -> seq(T).
 from_list([H | T]) -> 
     {
@@ -51,11 +59,11 @@ to_list(undefined) -> [].
 
 -spec map(fun((T) -> U), seq(T)) -> seq(U).
 map(_, undefined) -> undefined;
-map(Map, { seq, Head, Rest }) ->
+map(Mapper, { seq, Head, Rest }) ->
     {
         seq,
-        fun() -> Map(Head()) end,
-        fun() -> map(Map, Rest()) end
+        fun() -> Mapper(Head()) end,
+        fun() -> map(Mapper, Rest()) end
     }.
 
 -spec fold(fun((T, any()) -> any()), any(), seq(T)) -> any().
@@ -100,12 +108,23 @@ take(C, {seq, First, Rest }) ->
         fun() -> take(C - 1, Rest()) end
     }.
 
--spec zip(fun((T,U) -> V), seq(T), seq(U)) -> seq(V).
-zip(_Zip, _Seq1, undefined) -> undefined;
-zip(_Zip, undefined, _Seq2) -> undefined;
-zip(Zip, Seq1, Seq2) ->
+-spec zip(fun((T, U) -> V), seq(T), seq(U)) -> seq(V).
+zip(_Zipper, _Seq1, undefined) -> undefined;
+zip(_Zipper, undefined, _Seq2) -> undefined;
+zip(Zipper, Seq1, Seq2) ->
     {
         seq,
-        fun() -> Zip(first(Seq1), first(Seq2)) end,
-        fun() -> zip(Zip, rest(Seq1), rest(Seq2)) end
+        fun() -> Zipper(first(Seq1), first(Seq2)) end,
+        fun() -> zip(Zipper, rest(Seq1), rest(Seq2)) end
+    }.
+
+-spec zip3(fun((T, U, V) -> W), seq(T), seq(U), seq(V)) -> seq(W).
+zip3(_Zipper, _Seq1, _Seq2, undefined) -> undefined;
+zip3(_Zipper, _Seq1, undefined, _Seq3) -> undefined;
+zip3(_Zipper, undefined, _Seq2, _Seq3) -> undefined;
+zip3(Zipper, Seq1, Seq2, Seq3) ->
+    {
+        seq,
+        fun() -> Zipper(first(Seq1), first(Seq2), first(Seq3)) end,
+        fun() -> zip3(Zipper, rest(Seq1), rest(Seq2), rest(Seq3)) end
     }.
