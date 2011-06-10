@@ -19,11 +19,11 @@ cons(N, Seq) ->
 
 -spec nth(integer(), seq(T)) -> T.
 nth(1, Seq) -> first(Seq);
-nth(N, Seq) -> nth(N - 1, rest(Seq)).
+nth(N, Seq) when N > 1 -> nth(N - 1, rest(Seq)).
 
 -spec nthrest(integer(), seq(T)) -> seq(T).
 nthrest(1, Seq) -> rest(Seq);
-nthrest(N, Seq) -> nth(N - 1, rest(Seq)).
+nthrest(N, Seq) when N > 1 -> nth(N - 1, rest(Seq)).
 
 -spec from_list([T,...]) -> seq(T).
 from_list([H | T]) -> 
@@ -45,7 +45,7 @@ series(Start, Interval) ->
     }.
 
 -spec random_integers(integer(), integer()) -> seq(integer()).
-random_integers(Minimum, Maximum) ->
+random_integers(Minimum, Maximum) when Minimum < Maximum ->
     RandomInteger = random:uniform(Maximum - Minimum + 1),
     {
         seq,
