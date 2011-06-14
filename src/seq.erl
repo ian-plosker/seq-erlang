@@ -2,6 +2,10 @@
 -compile(export_all).
 
 -type seq(T) :: { seq, fun(() -> T), fun(() -> seq(T)) }.
+-record(seq, {
+    first :: fun(() -> T),
+    rest :: fun(() -> seq(T))
+}).
 
 -record(seq, {
     first :: fun(() -> T),
