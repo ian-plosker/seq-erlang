@@ -7,11 +7,6 @@
     rest :: fun(() -> seq(T))
 }).
 
--record(seq, {
-    first :: fun(() -> T),
-    rest :: fun(() -> T)
-}).
-
 -spec first(seq(T)) -> T.
 first(Seq) -> (Seq#seq.first)().
 
