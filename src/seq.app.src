@@ -2,7 +2,7 @@
  [
   {description, "Lazy sequences"},
   {vsn, "0.0.2"},
-  {modules, [seq]},
+  {modules, [seq,pseq]},
   {applications, [stdlib]},
   {start_phases, []}
  ]
