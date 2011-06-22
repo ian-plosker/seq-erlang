@@ -7,6 +7,13 @@
     rest :: fun(() -> seq(T))
 }).
 
+-spec create(fun(() -> T), fun(() -> seq(T))) -> seq(T).
+create(First, Rest) ->
+    #seq{
+        first = First,
+        rest = Rest
+    }.
+
 -spec first(seq(T)) -> T.
 first(Seq) -> (Seq#seq.first)().
 
@@ -72,23 +79,23 @@ fold(Fn, Acc, Seq) -> fold(Fn, Fn(first(Seq), Acc), rest(Seq)).
 
 -spec filter(fun((T) -> boolean()), seq(T)) -> seq(T).
 filter(_, undefined) -> undefined;
-filter(Filter, Seq) ->
+filter(Filterer, Seq) ->
     #seq{
         first = fun() ->
-            case Filter(first(Seq)) of
+            case Filterer(first(Seq)) of
                 true -> first(Seq);
                 false -> 
-                    case (FRest = filter(Filter, rest(Seq))) /= undefined of
+                    case (FRest = filter(Filterer, rest(Seq))) /= undefined of
                         true -> first(FRest);
                         false -> undefined
                     end
             end
         end,
         rest = fun() ->
-            case Filter(first(Seq)) of
-                true -> filter(Filter, rest(Seq));
+            case Filterer(first(Seq)) of
+                true -> filter(Filterer, rest(Seq));
                 false ->
-                    case (FRest = filter(Filter, rest(Seq))) /= undefined of
+                    case (FRest = filter(Filterer, rest(Seq))) /= undefined of
                         true -> rest(FRest);
                         false -> undefined
                     end
@@ -122,4 +129,16 @@ zip3(Zipper, Seq1, Seq2, Seq3) ->
     #seq{
         first = fun() -> Zipper(first(Seq1), first(Seq2), first(Seq3)) end,
         rest = fun() -> zip3(Zipper, rest(Seq1), rest(Seq2), rest(Seq3)) end
+    }.
+
+-spec do(fun((T) -> any()), seq(T)) -> seq(T).
+%% @doc Add a side effect
+do(Doer, Seq) ->
+    #seq{
+        first = fun() ->
+            First = first(Seq),
+            Doer(First),
+            First
+        end,
+        rest = fun() -> do(Doer, rest(Seq)) end
     }.
